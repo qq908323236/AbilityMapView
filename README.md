@@ -1,8 +1,11 @@
 # AbilityMapView
 仿LOL掌盟能力七星图控件
 
+源码解析博客地址：[自定义View之LOL能力七星图](http://blog.csdn.net/fu908323236/article/details/78356344)
+
 预览图
 
+![预览图](https://github.com/qq908323236/AbilityMapView/blob/master/image/pre_img.png)
 
 
 xml中
