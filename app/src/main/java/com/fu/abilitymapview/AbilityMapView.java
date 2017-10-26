@@ -35,17 +35,18 @@ public class AbilityMapView extends View {
     private Paint linePaint;  //画线的笔
     private Paint textPaint;  //画文字的笔
 
-    private int viewHeight;
-    private int viewWidth;
-    private ArrayList<ArrayList<PointF>> pointsArrayList;  //存储点数组的数组
+    private int viewHeight;   //控件宽度
+    private int viewWidth;    //控件高度
+    private ArrayList<ArrayList<PointF>> pointsArrayList;  //存储多边形顶点数组的数组
     private ArrayList<PointF> abilityPoints;   //存储能力点的数组
 
-
     public AbilityMapView(Context context) {
+        //这地方改为this,使得不管怎么初始化都会进入第三个构造函数中
         this(context, null);
     }
 
     public AbilityMapView(Context context, @Nullable AttributeSet attrs) {
+        //这地方改为this,使得不管怎么初始化都会进入第三个构造函数中
         this(context, attrs, 0);
     }
 
@@ -65,7 +66,7 @@ public class AbilityMapView extends View {
      * @param context
      */
     private void initSize(Context context) {
-        n = 7;  //七条边
+        n = 5;  //七条边
         R = dp2pxF(context, 100);  //半径暂时设为100dp
         intervalCount = 4;   //有四层
         angle = (float) ((2 * Math.PI) / n);     //一周是2π,这里用π，因为进制的问题，不能用360度,画出来会有问题
@@ -90,7 +91,8 @@ public class AbilityMapView extends View {
             //创建一个存储点的数组
             ArrayList<PointF> points = new ArrayList<>();
             for (int j = 0; j < n; j++) {
-                float r = R * ((float) (4 - i) / intervalCount);  //每一圈的半径
+                float r = R * ((float) (4 - i) / intervalCount);  //每一圈的半径都按比例减少
+                //这里减去Math.PI / 2 是为了让多边形逆时针旋转90度，所以后面的所有用到cos,sin的都要减
                 x = (float) (r * Math.cos(j * angle - Math.PI / 2));
                 y = (float) (r * Math.sin(j * angle - Math.PI / 2));
                 points.add(new PointF(x, y));
@@ -136,7 +138,7 @@ public class AbilityMapView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        //1.把画布的原点移动到控件的中心点
+        //把画布的原点移动到控件的中心点
         canvas.translate(viewWidth / 2, viewHeight / 2);
 
         drawPolygon(canvas);
@@ -154,7 +156,7 @@ public class AbilityMapView extends View {
     }
 
     /**
-     * 绘制多边形边框,每一圈都绘制
+     * 绘制多边形边,每一圈都绘制
      *
      * @param canvas
      */
@@ -164,8 +166,8 @@ public class AbilityMapView extends View {
         linePaint.setStyle(Paint.Style.FILL_AND_STROKE);  //设置为填充且描边
 
         Path path = new Path();  //路径
-        for (int i = 0; i < intervalCount; i++) {  //循环、一圈一圈的绘制
-            //每一圈的颜色都都不同
+        for (int i = 0; i < intervalCount; i++) {  //循环、一层一层的绘制
+            //每一层的颜色都都不同
             switch (i) {
                 case 0:
                     linePaint.setColor(Color.parseColor("#D4F0F3"));
@@ -180,11 +182,11 @@ public class AbilityMapView extends View {
                     linePaint.setColor(Color.parseColor("#278891"));
                     break;
             }
-            for (int j = 0; j < n; j++) {   //每一圈有n个点
+            for (int j = 0; j < n; j++) {   //每一层有n个点
                 float x = pointsArrayList.get(i).get(j).x;
                 float y = pointsArrayList.get(i).get(j).y;
                 if (j == 0) {
-                    //如果是每圈的第一个点就把path的起点设置为这个点
+                    //如果是每层的第一个点就把path的起点设置为这个点
                     path.moveTo(x, y);
                 } else {
                     path.lineTo(x, y);
@@ -207,7 +209,6 @@ public class AbilityMapView extends View {
      */
     private void drawOutLine(Canvas canvas) {
         canvas.save();//保存画布当前状态(平移、放缩、旋转、裁剪等),和canvas.restore()配合使用
-        //先把画布顺时针旋转90度，然后画完调用一下canvas.restore()就会恢复，效果就是这次绘制的东西逆时针旋转90度
 
         linePaint.setColor(Color.parseColor("#99DCE2"));
         linePaint.setStyle(Paint.Style.STROKE);  //设置空心的
@@ -316,6 +317,9 @@ public class AbilityMapView extends View {
             return;
         }
         this.data = data;
+
+        //View本身调用迫使view重画
+        invalidate();
     }
 
     /**
