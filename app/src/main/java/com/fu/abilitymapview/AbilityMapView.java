@@ -93,8 +93,8 @@ public class AbilityMapView extends View {
             for (int j = 0; j < n; j++) {
                 float r = R * ((float) (4 - i) / intervalCount);  //每一圈的半径都按比例减少
                 //这里减去Math.PI / 2 是为了让多边形逆时针旋转90度，所以后面的所有用到cos,sin的都要减
-                x = (float) (r * Math.cos(j * angle ));
-                y = (float) (r * Math.sin(j * angle ));
+                x = (float) (r * Math.cos(j * angle - Math.PI / 2));
+                y = (float) (r * Math.sin(j * angle - Math.PI / 2));
                 points.add(new PointF(x, y));
             }
             pointsArrayList.add(points);
@@ -252,8 +252,8 @@ public class AbilityMapView extends View {
         int[] allAbility = data.getAllAbility();
         for (int i = 0; i < n; i++) {
             float r = R * (allAbility[i] / 100.0f);  //能力值/100再乘以半径就是所占的比例
-            float x = (float) (r * Math.cos(i * angle ));
-            float y = (float) (r * Math.sin(i * angle ));
+            float x = (float) (r * Math.cos(i * angle - Math.PI / 2));
+            float y = (float) (r * Math.sin(i * angle - Math.PI / 2));
             abilityPoints.add(new PointF(x, y));
         }
 
@@ -289,8 +289,8 @@ public class AbilityMapView extends View {
         ArrayList<PointF> textPoints = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             float r = R + dp2pxF(getContext(), 15f);
-            float x = (float) (r * Math.cos(i * angle ));
-            float y = (float) (r * Math.sin(i * angle ));
+            float x = (float) (r * Math.cos(i * angle - Math.PI / 2));
+            float y = (float) (r * Math.sin(i * angle - Math.PI / 2));
             textPoints.add(new PointF(x, y));
         }
         //拿到字体测量器
