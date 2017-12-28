@@ -245,6 +245,9 @@ public class AbilityMapView extends View {
      * @param canvas
      */
     private void drawAbilityLine(Canvas canvas) {
+        if (data == null) {
+            return;
+        }
         canvas.save();
 
         //先把能力点初始化出来
@@ -317,6 +320,42 @@ public class AbilityMapView extends View {
             return;
         }
         this.data = data;
+
+        //View本身调用迫使view重画
+        invalidate();
+    }
+
+    /**
+     * 改变能力值
+     * @param type
+     * @param progress
+     */
+    public void changeProgress(String type, int progress) {
+        switch (type) {
+            case "击杀":
+                data.setKill(progress);
+                break;
+            case "生存":
+                data.setSurvival(progress);
+                break;
+            case "助攻":
+                data.setAssist(progress);
+                break;
+            case "物理":
+                data.setAd(progress);
+                break;
+            case "魔法":
+                data.setAp(progress);
+                break;
+            case "防御":
+                data.setDefense(progress);
+                break;
+            case "金钱":
+                data.setMoney(progress);
+                break;
+            default:
+                break;
+        }
 
         //View本身调用迫使view重画
         invalidate();
