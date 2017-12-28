@@ -3,6 +3,9 @@
 
 源码解析博客地址：[自定义View之LOL能力七星图](http://blog.csdn.net/fu908323236/article/details/78356344)
 
+##更新
+添加了seekbar调节能力值的功能
+
 预览图
 
 ![预览图](https://github.com/qq908323236/AbilityMapView/blob/master/image/pre_img.png)
